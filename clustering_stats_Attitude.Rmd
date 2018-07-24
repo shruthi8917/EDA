@@ -1,0 +1,63 @@
+---
+title: "Untitled"
+author: "Sruthi Kizhakathra"
+date: "April 15, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+library(datasets)
+
+str(attitude)
+#the structure reveals that all attributes are numeric
+
+summary(attitude)
+#summary reveals no outliers or noisy data
+```
+
+#subsetting our data
+
+```{r}
+dat = attitude[,c(3,4)]
+
+plot(dat, main="% of responses favourable to Learning and Privilege", pch=20, cex=2)
+```
+
+#clustering
+
+```{r}
+km1 <- kmeans(dat, 2, nstart=100)
+
+# Plot results
+plot(dat, col =(km1$cluster +1) , main="K-Means result with 2 clusters", pch=20, cex=2)
+```
+#finding optimal no of k - elbow curve
+```{r}
+
+mydata <- dat
+wss <- (nrow(mydata)-1)*sum(apply(mydata,2,var))
+for (i in 2:15) wss[i] <- sum(kmeans(mydata,centers=i)$withinss)
+plot(1:15, wss, type="b", xlab="Number of Clusters",
+     ylab="Within groups sum of squares",
+     main="Assessing the Optimal Number of Clusters with the Elbow Method",
+     pch=20, cex=2)
+```
+
+
+```{r}
+
+km2 <- kmeans(dat, 6,nstart=100)
+km2$cluster
+
+plot(dat, col =(km2$cluster +1) , main="K-Means result with 6 clusters", pch=20, cex=2)
+```
